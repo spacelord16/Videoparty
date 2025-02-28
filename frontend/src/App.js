@@ -26,13 +26,14 @@
 
 
 import React from 'react';
+import Login from './components/Login';
 
 function App() {
-  return (
-    <div>
-      <h1>Welcome to the Video Streaming Platform</h1>
-    </div>
-  );
+    return (
+        <div className="App">
+            <Login />
+        </div>
+    );
 }
 
 export default App;
