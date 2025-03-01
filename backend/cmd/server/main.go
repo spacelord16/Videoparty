@@ -1,48 +1,45 @@
 package main
 
 import (
-    "database/sql"
     "log"
-
-    _ "github.com/lib/pq" // PostgreSQL driver
-
-	"net/http"
+    "os"
+    "github.com/joho/godotenv"
     "github.com/gin-gonic/gin"
-	"github.com/spacelord16/Videoparty/internal/middleware"
-	"github.com/spacelord16/Videoparty/internal/api"
     "github.com/spacelord16/Videoparty/internal/db"
+    "github.com/spacelord16/Videoparty/internal/api"
 )
 
 func main() {
-    router := gin.Default()
-    router.Use(middleware.Logger())
+    // Load environment variables
+    err := godotenv.Load("/mnt/d/Videoparty/Videoparty/.env")
+    if err != nil {
+        log.Fatalf("Error loading .env file: %s", err)
+    }
 
     // Initialize the database
-    database := db.InitDB()
+    database, err := db.InitDB()
+    if err != nil {
+        log.Fatalf("Failed to connect to database: %s", err)
+    }
     defer database.Close()
 
-    router.GET("/", func(c *gin.Context) {
-        c.String(http.StatusOK, "Welcome to the Video Streaming Platform")
+    // Initialize the router
+    router := gin.Default()
+
+    // Set up routes
+    router.POST("/register", func(c *gin.Context) {
+        api.RegisterUser(c, database)
+    })
+    router.POST("/login", func(c *gin.Context) {
+        api.LoginUser(c, database)
     })
 
-    // Open a database connection
-    db, err := sql.Open("postgres", "user=postgres dbname=example sslmode=disable")
-    if err != nil {
-        log.Fatal(err)
+    // Start the server
+    if err := router.Run(":8080"); err != nil {
+        log.Fatal("Failed to run server:", err)
     }
-    defer db.Close()
 
-    // Example query
-    var name string
-    err = db.QueryRow("SELECT name FROM users WHERE id = $1", 1).Scan(&name)
-    if err != nil {
-        log.Fatal(err)
-    }
-    log.Println(name)
-
-    // User routes
-    router.POST("/register", api.RegisterUser)
-    router.POST("/login", api.LoginUser)
-
-    router.Run(":8080")
+    // Debugging print to ensure DB_HOST is loaded
+    dbHost := os.Getenv("DB_HOST")
+    log.Println("Database Host:", dbHost)
 }
