@@ -8,15 +8,18 @@ import (
 
 	"net/http"
     "github.com/gin-gonic/gin"
-    "github.com/spacelord16/Videoparty/internal/db" 
 	"github.com/spacelord16/Videoparty/internal/middleware"
 	"github.com/spacelord16/Videoparty/internal/api"
-
+    "github.com/spacelord16/Videoparty/internal/db"
 )
 
 func main() {
     router := gin.Default()
     router.Use(middleware.Logger())
+
+    // Initialize the database
+    database := db.InitDB()
+    defer database.Close()
 
     router.GET("/", func(c *gin.Context) {
         c.String(http.StatusOK, "Welcome to the Video Streaming Platform")
@@ -36,10 +39,6 @@ func main() {
         log.Fatal(err)
     }
     log.Println(name)
-
-    // Initialize the database
-    database := db.InitDB()
-    defer database.Close()
 
     // User routes
     router.POST("/register", api.RegisterUser)
