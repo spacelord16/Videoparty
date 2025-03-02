@@ -40,20 +40,21 @@ func InitDB() (*sql.DB, error) {
 
 func CreateUser(db *sql.DB, user model.User) error {
     log.Printf("CreateUser called with username=%s", user.Username)
+
     hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
     if err != nil {
-        log.Printf("Error hashing password: %v", err)
+        log.Printf("Error hashing password: %s", err)
         return err
     }
-    log.Println("Hashed password created")
+    log.Println("Password hashed successfully.")
 
     _, err = db.Exec("INSERT INTO users (username, password) VALUES ($1, $2)", user.Username, hashedPassword)
     if err != nil {
-        log.Printf("Error inserting new user: %v", err)
+        log.Printf("Error inserting new user into DB: %v", err)
         return err
     }
 
-    log.Println("User inserted successfully")
+    log.Println("User inserted successfully.")
     return nil
 }
 
