@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from 'axios'; // Ensure axios is imported
 
 function Register() {
     const [username, setUsername] = useState('');
@@ -11,12 +11,14 @@ function Register() {
         setLoading(true);
         setMessage('');
         try {
-            const response = await axios.post('http://localhost:8080/register', {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/register`, {
                 username,
                 password
             });
             setMessage('Registration successful! Please login.');
-            // Reset form or redirect as needed
+            setUsername(''); // Reset username
+            setPassword(''); // Reset password
+            // Optionally, redirect to login page or elsewhere after successful registration
         } catch (error) {
             setMessage('Registration failed: ' + (error.response?.data?.error || error.message));
         } finally {
@@ -27,8 +29,18 @@ function Register() {
     return (
         <div>
             <h2>Register</h2>
-            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+            />
+            <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            />
             <button onClick={handleRegister} disabled={loading}>
                 {loading ? 'Registering...' : 'Register'}
             </button>
