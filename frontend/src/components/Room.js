@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 
 const Room = () => {
   const { code } = useParams();
-  const navigate = useNavigate();
   const videoRef = useRef(null);
   const [room, setRoom] = useState(null);
   const [isHost, setIsHost] = useState(false);

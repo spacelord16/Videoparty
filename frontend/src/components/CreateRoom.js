@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const CreateRoom = () => {
   const navigate = useNavigate();
   const [roomName, setRoomName] = useState("");
@@ -10,7 +12,7 @@ const CreateRoom = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/rooms", {
+      const response = await axios.post(`${API_URL}/api/rooms`, {
         name: roomName,
       });
       navigate(`/room/${response.data.code}`);
