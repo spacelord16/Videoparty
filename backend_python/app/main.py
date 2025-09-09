@@ -120,8 +120,10 @@ def create_room(room: schemas.RoomCreate, db: Session = Depends(get_db)):
     video_info = get_video_info(room.video_url)
     processed_url = video_info.get("embed_url", room.video_url)
 
-    # Create a temporary host_id for no-auth rooms
-    db_room = Room(**room.dict(), code=room_code, host_id=1, video_url=processed_url)
+    # Create room without host_id for no-auth experience
+    room_data = room.dict()
+    room_data.update({"code": room_code, "video_url": processed_url, "host_id": None})
+    db_room = Room(**room_data)
     db.add(db_room)
     db.commit()
     db.refresh(db_room)

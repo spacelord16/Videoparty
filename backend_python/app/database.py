@@ -38,7 +38,7 @@ class Room(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     code = Column(String, unique=True, index=True)
-    host_id = Column(Integer, ForeignKey("users.id"))
+    host_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     host = relationship("User", back_populates="hosted_rooms")
     video_url = Column(String)
     is_playing = Column(Boolean, default=False)
