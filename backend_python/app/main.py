@@ -2,7 +2,8 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from . import schemas, security
-from .database import engine, get_db, User, Room, RoomParticipant
+from .database import engine, get_db, User, Room, RoomParticipant, PlaylistItem
+from .video_utils import detect_video_platform, get_video_info
 from jose import JWTError, jwt
 import random
 import string
@@ -93,11 +94,34 @@ def generate_room_code(length=6):
     return "".join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
 
+@app.post("/api/video/analyze")
+def analyze_video_url(video_data: dict):
+    """Analyze a video URL and return platform information"""
+    url = video_data.get("url", "")
+    if not url:
+        raise HTTPException(status_code=400, detail="URL is required")
+
+    video_info = get_video_info(url)
+    return {
+        "original_url": url,
+        "platform": video_info["platform"],
+        "embed_url": video_info["embed_url"],
+        "thumbnail": video_info.get("thumbnail"),
+        "supports_sync": video_info.get("supports_sync", True),
+        "video_id": video_info.get("video_id"),
+    }
+
+
 @app.post("/api/rooms", response_model=schemas.RoomResponse)
 def create_room(room: schemas.RoomCreate, db: Session = Depends(get_db)):
     room_code = generate_room_code()
+
+    # Process video URL to get platform info
+    video_info = get_video_info(room.video_url)
+    processed_url = video_info.get("embed_url", room.video_url)
+
     # Create a temporary host_id for no-auth rooms
-    db_room = Room(**room.dict(), code=room_code, host_id=1)
+    db_room = Room(**room.dict(), code=room_code, host_id=1, video_url=processed_url)
     db.add(db_room)
     db.commit()
     db.refresh(db_room)

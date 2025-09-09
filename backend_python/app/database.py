@@ -43,9 +43,24 @@ class Room(Base):
     video_url = Column(String)
     is_playing = Column(Boolean, default=False)
     current_time = Column(Float, default=0.0)
+    current_video_index = Column(Integer, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     participants = relationship("RoomParticipant", back_populates="room")
+    playlist = relationship("PlaylistItem", back_populates="room", order_by="PlaylistItem.order_index")
+
+class PlaylistItem(Base):
+    __tablename__ = "playlist_items"
+    id = Column(Integer, primary_key=True, index=True)
+    room_id = Column(Integer, ForeignKey("rooms.id"))
+    room = relationship("Room", back_populates="playlist")
+    title = Column(String)
+    video_url = Column(String)
+    platform = Column(String, default="direct")
+    thumbnail_url = Column(String, nullable=True)
+    duration = Column(Float, nullable=True)
+    order_index = Column(Integer)
+    added_at = Column(DateTime, default=datetime.utcnow)
 
 
 class RoomParticipant(Base):
