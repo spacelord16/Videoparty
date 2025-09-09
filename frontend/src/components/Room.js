@@ -24,6 +24,8 @@ const Room = () => {
         const response = await axios.get(`${API_URL}/api/rooms/${code}`);
         setRoom(response.data);
         setVideoUrl(response.data.video_url);
+        // Clear any previous offline/demo error once backend responds
+        if (error) setError(null);
         // Initialize with a sample playlist for demo
         if (playlist.length === 0) {
           setPlaylist([
@@ -194,7 +196,7 @@ const Room = () => {
   const handlePlayPause = async () => {
     if (isHost) {
       try {
-        await axios.put(`/api/rooms/${code}/state`, {
+        await axios.put(`${API_URL}/api/rooms/${code}/state`, {
           is_playing: !room.is_playing,
           current_time: videoRef.current.currentTime,
         });
@@ -207,7 +209,7 @@ const Room = () => {
   const handleTimeUpdate = async () => {
     if (isHost) {
       try {
-        await axios.put(`/api/rooms/${code}/state`, {
+        await axios.put(`${API_URL}/api/rooms/${code}/state`, {
           current_time: videoRef.current.currentTime,
         });
       } catch (err) {
