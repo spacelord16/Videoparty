@@ -47,7 +47,10 @@ class Room(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     participants = relationship("RoomParticipant", back_populates="room")
-    playlist = relationship("PlaylistItem", back_populates="room", order_by="PlaylistItem.order_index")
+    playlist = relationship(
+        "PlaylistItem", back_populates="room", order_by="PlaylistItem.order_index"
+    )
+
 
 class PlaylistItem(Base):
     __tablename__ = "playlist_items"
