@@ -16,13 +16,20 @@ const CreateRoom = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+    console.log("Creating room with API_URL:", API_URL);
+
     try {
       const response = await axios.post(`${API_URL}/api/rooms`, {
         name: roomName,
         video_url: videoUrl,
       });
+      console.log("Room created successfully:", response.data);
       navigate(`/room/${response.data.code}`);
     } catch (err) {
+      console.error("Room creation failed:", err);
+      setError(`Failed to create room: ${err.message}`);
+
       // Fallback to offline mode with generated room code
       const roomCode = generateRoomCode();
       console.log("Backend unavailable, creating offline room:", roomCode);
