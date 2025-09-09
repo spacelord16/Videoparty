@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from . import schemas, security
 from .database import engine, get_db, User, Room, RoomParticipant, PlaylistItem
 from .video_utils import detect_video_platform, get_video_info
+from .ai_recommendations import ai_recommendations
 from jose import JWTError, jwt
 import random
 import string
@@ -170,3 +171,33 @@ def update_room_state(
     db.commit()
     db.refresh(db_room)
     return db_room
+
+
+# AI Recommendation Endpoints
+@app.post("/api/recommendations/smart")
+def get_smart_recommendations(request_data: dict):
+    """Get AI-powered recommendations based on current playlist"""
+    current_playlist = request_data.get("playlist", [])
+    limit = request_data.get("limit", 5)
+
+    recommendations = ai_recommendations.get_smart_recommendations(
+        current_playlist, limit
+    )
+    return {"recommendations": recommendations, "type": "smart"}
+
+
+@app.get("/api/recommendations/trending")
+def get_trending_recommendations():
+    """Get trending/popular content"""
+    trending = ai_recommendations.get_trending_content(limit=6)
+    return {"recommendations": trending, "type": "trending"}
+
+
+@app.post("/api/recommendations/mood")
+def get_mood_recommendations(mood_data: dict):
+    """Get mood-based recommendations"""
+    mood = mood_data.get("mood", "chill")
+    limit = mood_data.get("limit", 4)
+
+    recommendations = ai_recommendations.get_mood_based_recommendations(mood, limit)
+    return {"recommendations": recommendations, "type": "mood", "mood": mood}
