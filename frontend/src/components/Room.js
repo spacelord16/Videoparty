@@ -33,7 +33,7 @@ const Room = () => {
           ]);
         }
       } catch (err) {
-        setError("Failed to fetch room data. Creating offline demo room...");
+        setError("Backend offline - Running in demo mode! 🎬");
         // Create a demo room for offline testing
         setRoom({
           id: 1,
@@ -42,6 +42,34 @@ const Room = () => {
           is_playing: false,
           current_time: 0,
         });
+        
+        // Add sample playlist items for demo
+        if (playlist.length === 0) {
+          setPlaylist([
+            {
+              title: "🎵 Chill Lofi Hip Hop",
+              url: "https://www.youtube.com/embed/jfKfPfyJRdk",
+              original_url: "https://www.youtube.com/watch?v=jfKfPfyJRdk",
+              platform: "youtube",
+              thumbnail: "https://img.youtube.com/vi/jfKfPfyJRdk/maxresdefault.jpg"
+            },
+            {
+              title: "🌙 Relaxing Night Jazz",
+              url: "https://www.youtube.com/embed/Dx5qFachd3A",
+              original_url: "https://www.youtube.com/watch?v=Dx5qFachd3A", 
+              platform: "youtube",
+              thumbnail: "https://img.youtube.com/vi/Dx5qFachd3A/maxresdefault.jpg"
+            },
+            {
+              title: "🎸 Acoustic Guitar Session",
+              url: "https://www.youtube.com/embed/tum7eTWFk88",
+              original_url: "https://www.youtube.com/watch?v=tum7eTWFk88",
+              platform: "youtube", 
+              thumbnail: "https://img.youtube.com/vi/tum7eTWFk88/maxresdefault.jpg"
+            }
+          ]);
+          setVideoUrl("https://www.youtube.com/embed/jfKfPfyJRdk");
+        }
       }
     };
 
