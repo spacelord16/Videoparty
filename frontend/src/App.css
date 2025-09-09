@@ -7,12 +7,13 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(180deg, #0b0b0b 0%, #151515 100%);
+  color: #f5f5f5;
   min-height: 100vh;
 }
 
@@ -23,10 +24,10 @@ body {
 
 /* Navigation */
 .navbar {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(20, 20, 20, 0.9);
   backdrop-filter: blur(10px);
   padding: 1rem 2rem;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -38,7 +39,7 @@ body {
 .nav-brand {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #667eea;
+  color: #ffffff;
   text-decoration: none;
 }
 
@@ -48,7 +49,7 @@ body {
 }
 
 .nav-link {
-  color: #333;
+  color: #e5e5e5;
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 20px;
@@ -56,8 +57,8 @@ body {
 }
 
 .nav-link:hover {
-  background-color: #667eea;
-  color: white;
+  background-color: #2a2a2a;
+  color: #fff;
 }
 
 /* Content */
@@ -70,7 +71,7 @@ body {
 /* Home Page */
 .home {
   text-align: center;
-  color: white;
+  color: #f5f5f5;
   padding: 3rem 1rem;
 }
 
@@ -94,8 +95,8 @@ body {
 
 /* Buttons */
 .button {
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  color: white;
+  background: linear-gradient(45deg, #1f1f1f, #2a2a2a);
+  color: #f5f5f5;
   padding: 1rem 2rem;
   border: none;
   border-radius: 25px;
@@ -103,24 +104,25 @@ body {
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
   display: inline-block;
 }
 
 .button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  color: white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(45deg, #2a2a2a, #3a3a3a);
+  color: #fff;
   text-decoration: none;
 }
 
 /* Forms */
 .create-room-container,
 .join-room-container {
-  background: white;
+  background: #111111;
   padding: 2rem;
   border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
   max-width: 500px;
   margin: 0 auto;
 }
@@ -134,21 +136,23 @@ body {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #333;
+  color: #e5e5e5;
 }
 
 .form-group input {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e1e1e1;
+  border: 2px solid #2a2a2a;
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.3s;
+  background: #151515;
+  color: #f5f5f5;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #6b6b6b;
 }
 
 .form-group small {
@@ -160,10 +164,10 @@ body {
 
 /* Room Components */
 .room-container {
-  background: white;
+  background: #111111;
   border-radius: 15px;
   padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
   margin: 0 auto;
   max-width: 1200px;
 }
@@ -199,8 +203,8 @@ body {
 }
 
 .platform-badge {
-  background: #667eea;
-  color: white;
+  background: #222;
+  color: #f5f5f5;
   padding: 0.25rem 0.75rem;
   border-radius: 15px;
   font-size: 0.875rem;
@@ -209,7 +213,7 @@ body {
 
 /* Playlist */
 .playlist-section {
-  background: #f8f9fa;
+  background: #0f0f0f;
   padding: 1.5rem;
   border-radius: 10px;
 }
@@ -224,14 +228,16 @@ body {
 .add-video input {
   flex: 1;
   padding: 0.5rem;
-  border: 1px solid #ddd;
+  border: 1px solid #333;
   border-radius: 5px;
   min-width: 200px;
+  color: #f5f5f5;
+  background: #181818;
 }
 
 .add-video button {
-  background: #28a745;
-  color: white;
+  background: #1f1f1f;
+  color: #f5f5f5;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -245,7 +251,7 @@ body {
 
 /* Recommendations */
 .recommendations-section {
-  background: #f0f2f5;
+  background: #0f0f0f;
   padding: 1.5rem;
   border-radius: 10px;
   margin-top: 2rem;
@@ -297,8 +303,8 @@ body {
 .room-info {
   text-align: center;
   padding: 1rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  background: #0f0f0f;
+  color: #f5f5f5;
   border-radius: 10px;
 }
 
@@ -389,8 +395,14 @@ body {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .room-container,
@@ -410,10 +422,10 @@ body {
 }
 
 .playlist-items::-webkit-scrollbar-thumb {
-  background: #667eea;
+  background: #4a4a4a;
   border-radius: 3px;
 }
 
 .playlist-items::-webkit-scrollbar-thumb:hover {
-  background: #5a6fd8;
+  background: #6b6b6b;
 }
