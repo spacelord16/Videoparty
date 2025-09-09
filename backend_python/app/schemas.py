@@ -41,7 +41,7 @@ class RoomResponse(BaseModel):
     id: int
     name: str
     code: str
-    host_id: int
+    host_id: Optional[int] = None
     video_url: str
     is_playing: bool
     current_time: float
