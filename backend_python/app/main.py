@@ -94,13 +94,10 @@ def generate_room_code(length=6):
 
 
 @app.post("/api/rooms", response_model=schemas.RoomResponse)
-def create_room(
-    room: schemas.RoomCreate,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
+def create_room(room: schemas.RoomCreate, db: Session = Depends(get_db)):
     room_code = generate_room_code()
-    db_room = Room(**room.dict(), code=room_code, host_id=current_user.id)
+    # Create a temporary host_id for no-auth rooms
+    db_room = Room(**room.dict(), code=room_code, host_id=1)
     db.add(db_room)
     db.commit()
     db.refresh(db_room)
@@ -116,36 +113,28 @@ def get_room(code: str, db: Session = Depends(get_db)):
 
 
 @app.post("/api/rooms/{code}/join", response_model=schemas.RoomResponse)
-def join_room(
-    code: str,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
+def join_room(code: str, db: Session = Depends(get_db)):
     db_room = db.query(Room).filter(Room.code == code).first()
     if not db_room:
         raise HTTPException(status_code=404, detail="Room not found")
-    participant = RoomParticipant(room_id=db_room.id, user_id=current_user.id)
-    db.add(participant)
-    db.commit()
+    # For now, just return the room without tracking participants
     return db_room
 
 
 @app.put("/api/rooms/{code}/state", response_model=schemas.RoomResponse)
 def update_room_state(
-    code: str,
-    room_update: schemas.RoomUpdate,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    code: str, room_update: schemas.RoomUpdate, db: Session = Depends(get_db)
 ):
     db_room = db.query(Room).filter(Room.code == code).first()
     if not db_room:
         raise HTTPException(status_code=404, detail="Room not found")
-    if db_room.host_id != current_user.id:
-        raise HTTPException(
-            status_code=403, detail="Only the room host can update the state"
-        )
-    db_room.is_playing = room_update.is_playing
-    db_room.current_time = room_update.current_time
+    # Allow anyone to update room state for now (no auth)
+    if hasattr(room_update, "is_playing") and room_update.is_playing is not None:
+        db_room.is_playing = room_update.is_playing
+    if hasattr(room_update, "current_time") and room_update.current_time is not None:
+        db_room.current_time = room_update.current_time
+    if hasattr(room_update, "video_url") and room_update.video_url is not None:
+        db_room.video_url = room_update.video_url
     db.commit()
     db.refresh(db_room)
     return db_room

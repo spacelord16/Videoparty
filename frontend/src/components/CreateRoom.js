@@ -7,6 +7,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 const CreateRoom = () => {
   const navigate = useNavigate();
   const [roomName, setRoomName] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
@@ -14,6 +15,7 @@ const CreateRoom = () => {
     try {
       const response = await axios.post(`${API_URL}/api/rooms`, {
         name: roomName,
+        video_url: videoUrl,
       });
       navigate(`/room/${response.data.code}`);
     } catch (err) {
@@ -36,6 +38,20 @@ const CreateRoom = () => {
             required
             placeholder="Enter room name"
           />
+        </div>
+        <div className="form-group">
+          <label htmlFor="videoUrl">Video URL:</label>
+          <input
+            type="text"
+            id="videoUrl"
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+            required
+            placeholder="YouTube, Vimeo, Twitch, or direct video URL"
+          />
+          <small>
+            🎬 We support YouTube, Vimeo, Twitch, and direct video links!
+          </small>
         </div>
         <button type="submit">Create Room</button>
       </form>

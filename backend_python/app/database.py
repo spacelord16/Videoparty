@@ -1,5 +1,13 @@
-
-from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, DateTime, ForeignKey
+from sqlalchemy import (
+    create_engine,
+    Column,
+    Integer,
+    String,
+    Float,
+    Boolean,
+    DateTime,
+    ForeignKey,
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 import os
@@ -8,11 +16,12 @@ from datetime import datetime
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/videoparty")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./videoparty.db")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
 
 class User(Base):
     __tablename__ = "users"
@@ -22,6 +31,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     hosted_rooms = relationship("Room", back_populates="host")
+
 
 class Room(Base):
     __tablename__ = "rooms"
@@ -37,6 +47,7 @@ class Room(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     participants = relationship("RoomParticipant", back_populates="room")
 
+
 class RoomParticipant(Base):
     __tablename__ = "room_participants"
     id = Column(Integer, primary_key=True, index=True)
@@ -45,6 +56,7 @@ class RoomParticipant(Base):
     room = relationship("Room", back_populates="participants")
     user = relationship("User")
     joined_at = Column(DateTime, default=datetime.utcnow)
+
 
 def get_db():
     db = SessionLocal()
