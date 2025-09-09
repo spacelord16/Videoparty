@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+
 const JoinRoom = () => {
   const navigate = useNavigate();
   const [roomCode, setRoomCode] = useState("");
@@ -10,7 +12,7 @@ const JoinRoom = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`/api/rooms/${roomCode}/join`);
+      await axios.post(`${API_URL}/api/rooms/${roomCode}/join`);
       navigate(`/room/${roomCode}`);
     } catch (err) {
       setError("Failed to join room. Please check the room code.");
