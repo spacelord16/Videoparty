@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const API_URL = "http://localhost:8000";
 
 const Room = () => {
   const { code } = useParams();
@@ -32,6 +32,7 @@ const Room = () => {
             {
               title: "Current Video",
               url: response.data.video_url,
+              original_url: response.data.video_url,
               platform: "youtube",
             },
           ]);
@@ -217,19 +218,6 @@ const Room = () => {
       }
     }
   };
-
-  useEffect(() => {
-    if (videoRef.current && room) {
-      if (Math.abs(videoRef.current.currentTime - room.current_time) > 1) {
-        videoRef.current.currentTime = room.current_time;
-      }
-      if (videoRef.current.paused && room.is_playing) {
-        videoRef.current.play();
-      } else if (!videoRef.current.paused && !room.is_playing) {
-        videoRef.current.pause();
-      }
-    }
-  }, [room]);
 
   if (error) {
     return <div className="error">{error}</div>;

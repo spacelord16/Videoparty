@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException, status
+import logging
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from . import schemas, security
@@ -10,6 +11,8 @@ import random
 import string
 
 from .database import Base
+
+logging.basicConfig(level=logging.INFO)
 
 Base.metadata.create_all(bind=engine)
 
@@ -121,10 +124,13 @@ def analyze_video_url(video_data: dict):
 
 @app.post("/api/rooms", response_model=schemas.RoomResponse)
 def create_room(room: schemas.RoomCreate, db: Session = Depends(get_db)):
+    logging.info("Creating room...")
     room_code = generate_room_code()
 
     # Process video URL to get platform info
+    logging.info("Getting video info...")
     video_info = get_video_info(room.video_url)
+    logging.info("Got video info.")
     processed_url = video_info.get("embed_url", room.video_url)
 
     # Create room without host_id for no-auth experience
@@ -132,14 +138,16 @@ def create_room(room: schemas.RoomCreate, db: Session = Depends(get_db)):
         name=room.name,
         video_url=processed_url,
         code=room_code,
-        host_id=None,
         is_playing=False,
         current_time=0.0,
         current_video_index=0,
     )
     db.add(db_room)
+    logging.info("Committing to database...")
     db.commit()
+    logging.info("Committed to database.")
     db.refresh(db_room)
+    logging.info("Room created.")
     return db_room
 
 

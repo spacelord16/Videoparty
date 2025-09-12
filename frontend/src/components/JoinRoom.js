@@ -15,6 +15,7 @@ const JoinRoom = () => {
       await axios.post(`${API_URL}/api/rooms/${roomCode}/join`);
       navigate(`/room/${roomCode}`);
     } catch (err) {
+      console.error(err);
       setError("Failed to join room. Please check the room code.");
     }
   };
